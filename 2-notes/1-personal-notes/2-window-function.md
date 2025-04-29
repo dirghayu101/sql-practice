@@ -1,7 +1,10 @@
- - So to try out window function, I have created a local PSQL environment. Let's try out different scripts and observe the results.
+# Window Function
+
+- So to try out window function, I have created a local PSQL environment. Let's try out different scripts and observe the results.
  Checkout `../scripts/1-init.sql` for the local DB.
 
 - I will be commenting my observations in the comments of these sql statements after running them:
+
  ```sql
  SELECT * FROM employee;
  SELECT * FROM department;
@@ -31,16 +34,17 @@ GROUP BY d.dept_name;
 
 -- over()
  ```
+
 - So first of all we have aggregate functions, which include:
-    - MIN()
-    - MAX()
-    - COUNT()
-    - SUM()
-    - AVG()
+  - MIN()
+  - MAX()
+  - COUNT()
+  - SUM()
+  - AVG()
 You use these functions with group by, but there is a rule which even profs talked about.
-If you are using these function with Select and you introduce any other attribute, you have to put those attribute in GROUP BY clause. Or you can only use these functions by themselves. 
+If you are using these function with Select and you introduce any other attribute, you have to put those attribute in GROUP BY clause. Or you can only use these functions by themselves.
 - One of the reason behind this rule is these aggregate functions return a scalar value (refer professor's notes), which is a single value and if you have multiple attributes it kinda create a contradiction.
-    - On a side note, type of values returned by a function are: Scalar, List and Table.
+  - On a side note, type of values returned by a function are: Scalar, List and Table.
 - Now to overcome this limitation of aggregate function we use window function.
 
 ```sql
@@ -58,8 +62,9 @@ FROM employee e;
 ```
 
 - So there are several functions that we can use with OVER to meet different use case/requirements.
-    - Some of the commonly used ones are: row_number, rank, dense_rank, lead and lag.
-    - The tutorial I am watching is specific to PSQL so there might be alternative to these methods or something with different syntax in oracle.
+  - Some of the commonly used ones are: row_number, rank, dense_rank, lead and lag.
+  - The tutorial I am watching is specific to PSQL so there might be alternative to these methods or something with different syntax in oracle.
+
 ```sql
 -- To assign row_number to every column.
 SELECT e.*,
@@ -105,7 +110,9 @@ FROM (
 ) sub
 WHERE sub.rn = 1;
 ```
+
 - Rank() is pretty useful. To test it out I updated my employee table and inserted new values.
+
 ```sql
 SELECT * FROM employee;
 
@@ -114,8 +121,9 @@ SELECT emp_id,
     RANK() OVER(PARTITION BY dept_num ORDER BY salary DESC) AS ranks
 FROM employee;
 ```
+
 - So in the above rank method result, I observed that if two employees have same salary they are given the same rank, but the employee following them gets sequential rank.
-    - Example if X's and Y's salary is 100 and Z's salary is 90, the rank structure will be:
+  - Example if X's and Y's salary is 100 and Z's salary is 90, the rank structure will be:
         X - 1
         Y - 1
         Z - 3
@@ -124,10 +132,12 @@ FROM employee;
     X - 1
     Y - 1
     Z - 2
+
 ```sql
 SELECT emp_id,
     first_name || ' ' || last_name AS emp_name,
     DENSE_RANK() OVER(PARTITION BY dept_num ORDER BY salary DESC) AS ranks
 FROM employee;
 ```
+
 - LAG() and LEAD() - Checkout docs, I don't think I would be using it so I am not typing it here.

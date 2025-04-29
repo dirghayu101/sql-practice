@@ -1,17 +1,22 @@
-### SQL functions:
+# SQL Nuances
+
+## SQL functions
+
 - CEIL vs ROUND vs FLOOR
-    - ROUND works mathematically, and CEIL and FLOOR work similar to how they work in JS.
-    - ROUND is more complicated and can have more utilities. Checkout documentation, there are nuances to handling negative number and might come handy in those cases.
+  - ROUND works mathematically, and CEIL and FLOOR work similar to how they work in JS.
+  - ROUND is more complicated and can have more utilities. Checkout documentation, there are nuances to handling negative number and might come handy in those cases.
 
+## JOIN condition using BETWEEN
 
-### JOIN condition using BETWEEN:
-- This is pretty interesting, I am not used to this syntax yet so I am putting it on my notes:
-    ```sql
+- This is pretty interesting, I am not used to this syntax yet so I am putting it on my notes
+
+```sql
     FROM Students s JOIN Grades g 
     ON s.marks BETWEEN g.min_mark AND g.max_mark
-    ```
+```
 
-### Important observation:
+## Important observation
+
 ```sql
 SELECT 
     CASE 
@@ -28,7 +33,9 @@ SELECT
 FROM Students s, Grades g
 ORDER BY grade DESC, name ASC, s.marks ASC;
 ```
-In the above SQL statement, I am trying to refer to the grade value in one column of select in another column and this is giving me error as it is not allowed. There are two fixes for this, which I found using chatGPT:
+
+- In the above SQL statement, I am trying to refer to the grade value in one column of select in another column and this is giving me error as it is not allowed. There are two fixes for this, which I found using chatGPT
+
 ```sql
 -- Fix 1:
 SELECT 
@@ -42,8 +49,10 @@ SELECT
 FROM Students s
 ORDER BY grade DESC, name ASC, s.marks ASC;
 ```
+
 More optimized:
-```sql
+
+``` sql
 -- Fix 2:
 SELECT 
     CASE 
@@ -60,5 +69,4 @@ FROM (
     FROM Students s
 ) AS subquery
 ORDER BY subquery.grade DESC, name ASC, subquery.marks ASC;
-
 ```
